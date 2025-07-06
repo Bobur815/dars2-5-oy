@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: vazifa6
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    environment:
+      # override DATABASE_URL so “postgres” service is found by hostname
+      DATABASE_URL: postgresql://postgres:12345678@postgres:5432/vazifa6?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: '6379'
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+      - redis
+    # (optional) mount code for hot-reload in dev
+    # volumes:
+    #   - .:/app
+    # command: npm run start:dev
+
+volumes:
+  postgres_data:
+  redis_data:

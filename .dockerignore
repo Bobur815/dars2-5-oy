@@ -1,0 +1,35 @@
+# Node modules & logs
+node_modules
+npm-debug.log*
+yarn-error.log*
+
+# Build output
+dist
+coverage
+
+# Prisma artifacts
+.prisma
+prisma/migrations
+
+# Env files & local config
+.env
+.env.*.local
+
+# Git metadata
+.git
+.gitignore
+
+# Docker configs (won’t be needed inside container)
+Dockerfile*
+docker-compose*.yml
+
+# IDE/editor folders
+.vscode
+.idea
+
+# macOS cruft
+.DS_Store
+
+# OS temp files
+tmp
+*.log
