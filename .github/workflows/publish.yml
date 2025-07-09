@@ -1,0 +1,41 @@
+name: Deploy Nest js project dars4
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "Creating project folder if it doesn't exist"
+            mkdir -p /home/ubuntu/nest-dars4
+            cd /home/ubuntu/nest-dars4
+
+            if [ ! -d  .git ]; then
+                echo "Cloning repository"
+                git clone https://github.com/Bobur815/dars2-5-oy.git
+            else 
+                echo "Pulling latest changes"
+                git pull origin main
+            fi 
+
+            echo "Stopping containers"
+            docker compose down
+
+            echo "Building containers"
+            docker compose build
+
+            echo "Running containers"
+            docker compose up -d
+
+
